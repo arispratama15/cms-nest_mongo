@@ -13,9 +13,10 @@ export class AuthController {
     return this.authService.login(authLoginDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
+  @UseGuards(JwtAuthGuard)
   async test() {
     return 'Success!';
   }
+  
 }
