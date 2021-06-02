@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
-
-import { UpdateResult, DeleteResult } from 'typeorm';
-
 import { Content } from './content.entity';
-import { CreateContentDto } from './dto/create-content.dto';
+import { CreateContentDto, GetOneItemDto, UpdateContentDto, DeleteItem } from './dto/content.dto';
 
 @Injectable()
 export class ContentsService {
@@ -15,26 +12,20 @@ export class ContentsService {
         return content;
     }
     
-    async showById(id: number): Promise<Content> {
-        const content = await this.findById(id);
-        
-        return content;
-    }
-
-    async findById(id: number) {
-        return await Content.findOne(id);
-    }
-
     async getAllContents(): Promise<Content[]> {
         return await Content.find();
     }
 
-    async delete(id): Promise<DeleteResult> {
-        return await Content.delete(id);
+    async findById(GetOneItemDto: GetOneItemDto) {
+        return await Content.findOne(GetOneItemDto.id);
     }
 
-    async update(content: Content): Promise<UpdateResult> {
-        return await Content.update(content.id, content);
+    async update(UpdateContentDto: UpdateContentDto) {
+        return await Content.update(UpdateContentDto.id, UpdateContentDto);
+    }
+
+    async delete(DeleteItem: DeleteItem) {
+        return await Content.delete(DeleteItem);
     }
 
 }

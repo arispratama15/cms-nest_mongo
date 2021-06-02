@@ -1,8 +1,7 @@
 import { Controller, Get, Post, Body, Delete, Put, Param, Res } from '@nestjs/common';
 
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './user.entity';
+import { CreateUserDto, UpdateUserDto, GetOneItemDto, DeleteItem } from './dto/user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -29,23 +28,21 @@ export class UsersController {
   }
 
   // find user by id
-  @Get('/:id')
-  show(@Param('id') id: string) {
-    return this.usersService.showById(+id);
+  @Get('/profile')
+  show(@Body() GetOneItemDto: GetOneItemDto) {
+    return this.usersService.findById(GetOneItemDto);
   }
 
   // put to edit user profile by id
   @Put('/:id')
-  async update(@Param('id') id, @Body() userData: User): Promise<any> {
-    userData.id = Number(id);
-    console.log('Update #' + userData.id)
-    return this.usersService.update(userData);
+  async update(@Body() UpdateUserDto: UpdateUserDto) {
+    return this.usersService.update(UpdateUserDto);
   }
 
   // delete user by id
-  @Delete('/:id')
-  async delete(@Param('id') id): Promise<any> {
-    return this.usersService.delete(id);
+  @Delete('/delete')
+  async delete(@Body() DeleteItem: DeleteItem) {
+    return this.usersService.delete(DeleteItem);
   }
 
 }

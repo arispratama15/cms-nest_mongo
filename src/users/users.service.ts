@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
-
-import { UpdateResult, DeleteResult } from 'typeorm';
-
 import { User } from './user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, UpdateUserDto, GetOneItemDto, DeleteItem } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -14,17 +11,6 @@ export class UsersService {
 
         delete user.password;
         return user;
-    }
-    
-    async showById(id: number): Promise<User> {
-        const user = await this.findById(id);
-
-        delete user.password;
-        return user;
-    }
-
-    async findById(id: number) {
-        return await User.findOne(id);
     }
 
     async findByUsername(username: string) {
@@ -39,12 +25,16 @@ export class UsersService {
         return await User.find();
     }
 
-    async delete(id): Promise<DeleteResult> {
-        return await User.delete(id);
+    async findById(GetOneItemDto: GetOneItemDto) {
+        return await User.findOne(GetOneItemDto.id);
     }
 
-    async update(user: User): Promise<UpdateResult> {
-        return await User.update(user.id, user);
+    async update(UpdateUserDto: UpdateUserDto) {
+        return await User.update(UpdateUserDto.id, UpdateUserDto);
+    }
+
+    async delete(DeleteItem: DeleteItem) {
+        return await User.delete(DeleteItem);
     }
 
 }

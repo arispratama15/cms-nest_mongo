@@ -1,8 +1,7 @@
 import { Controller, Get, Post, Body, Delete, Put, Param, Res } from '@nestjs/common';
 
 import { ContentsService } from './contents.service';
-import { CreateContentDto } from './dto/create-content.dto';
-import { Content } from './content.entity';
+import { CreateContentDto, GetOneItemDto, UpdateContentDto, DeleteItem } from './dto/content.dto';
 
 @Controller('contents')
 export class ContentsController {
@@ -11,8 +10,7 @@ export class ContentsController {
   // create content
   @Post()
   async createContent(@Res() res, @Body() CreateContentDto: CreateContentDto) {
-
-    const user = await this.contentsService.create(CreateContentDto);
+    await this.contentsService.create(CreateContentDto);
     return res.json({
       message: "Content has been created successfully"
     })
@@ -25,23 +23,21 @@ export class ContentsController {
   }
 
   // find user by id
-  @Get('/:id')
-  show(@Param('id') id: string) {
-    return this.contentsService.showById(+id);
+  @Get('/list')
+  show(@Body() GetOneItemDto: GetOneItemDto) {
+    return this.contentsService.findById(GetOneItemDto);
   }
 
   // put to edit user profile by id
   @Put(':id')
-  async update(@Param('id') id, @Body() contentData: Content): Promise<any> {
-    contentData.id = Number(id);
-    console.log('Update #' + contentData.id)
-    return this.contentsService.update(contentData);
+  async update(@Body() UpdateContentDto: UpdateContentDto) {
+    return this.contentsService.update(UpdateContentDto);
   }
 
   // delete user by id
-  @Delete(':id')
-  async delete(@Param('id') id): Promise<any> {
-    return this.contentsService.delete(id);
+  @Delete('/delete')
+  async delete(@Body() DeleteItem: DeleteItem) {
+    return this.contentsService.delete(DeleteItem);
   }
 
 }
