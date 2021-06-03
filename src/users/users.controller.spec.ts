@@ -11,6 +11,11 @@ describe('UsersController', () => {
       return {
         ...dto
       }
+    }),
+    findByUsername: jest.fn(dto => {
+      return {
+        message: "User already exist"
+      }
     })
   }
 
@@ -37,17 +42,17 @@ describe('UsersController', () => {
       username: "aris",
       password: "welcome@123",
       isAdmin: true
-    }
+    };
     expect(controller.addUser(payload)).toEqual(payload)
   })
 
-  it('should not create user already exist', () => {
+  it('Should throw exception user not found', async () => {
     const payload = {
       nama: "admin",
       username: "admin",
       password: "welcome@123",
       isAdmin: true
-    }
-    expect(controller.addUser(payload))
-  })
+    };
+    jest.spyOn(service, 'findByUsername').mockRejectedValueOnce(new Error('User already exist'));
+  });
 });
