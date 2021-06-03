@@ -6,6 +6,11 @@ import { CreateUserDto, UpdateUserDto, GetOneItemDto, DeleteItem } from './dto/u
 export class UsersService {
 
     async create(createUserDto: CreateUserDto) {
+        if (await this.findByUsername(createUserDto.username)) {
+            return ({
+              message: "User already exists"
+            })
+          }
         const user = User.create(createUserDto);
         await user.save();
 

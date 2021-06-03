@@ -9,16 +9,8 @@ export class UsersController {
 
   // create user
   @Post()
-  async addUser(@Res() res, @Body() createUserDto: CreateUserDto) {
-    if (await this.usersService.findByUsername(createUserDto.username)) {
-      return res.json({
-        message: "User already exists"
-      })
-    }
-    const user = await this.usersService.create(createUserDto);
-    return res.json({
-      message: "User has been created successfully"
-    })
+  addUser(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
   }
 
   // 'getAll()' returns the list of all the existing users in the database
