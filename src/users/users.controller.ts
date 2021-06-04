@@ -20,7 +20,7 @@ export class UsersController {
   }
 
   // find user by id
-  @Get('/profile')
+  @Post('/profile')
   show(@Body() GetOneItemDto: GetOneItemDto) {
     return this.usersService.findById(GetOneItemDto);
   }

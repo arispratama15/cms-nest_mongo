@@ -46,13 +46,4 @@ describe('UsersController', () => {
     expect(controller.addUser(payload)).toEqual(payload)
   })
 
-  it('Should throw exception user not found', async () => {
-    const payload = {
-      nama: "admin",
-      username: "admin",
-      password: "welcome@123",
-      isAdmin: true
-    };
-    jest.spyOn(service, 'findByUsername').mockRejectedValueOnce(new Error('User already exist'));
-  });
 });
