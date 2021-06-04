@@ -23,7 +23,7 @@ export class ContentsController {
   }
 
   // find user by id
-  @Get('/list')
+  @Post('/list')
   show(@Body() GetOneItemDto: GetOneItemDto) {
     return this.contentsService.findById(GetOneItemDto);
   }
