@@ -8,9 +8,9 @@ export class UsersService {
     async create(createUserDto: CreateUserDto) {
         if (await this.findByUsername(createUserDto.username)) {
             return ({
-              message: "User already exists"
+                message: "User already exists"
             })
-          }
+        }
         const user = User.create(createUserDto);
         await user.save();
 
