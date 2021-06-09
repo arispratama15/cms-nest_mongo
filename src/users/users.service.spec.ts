@@ -39,9 +39,9 @@ describe('UsersService', () => {
     it('should create a new user then return it', async () => {
       let user = new User();
 
+      jest.spyOn(service, 'findByUsername').mockImplementation(null);
       jest.spyOn(User, 'create').mockImplementation(() => user);
       jest.spyOn(User, 'save').mockImplementation(async () => user);
-      jest.spyOn(service, 'findByUsername').mockImplementation(null);
 
       expect(await service.create(new CreateUserDto())).toBe(user);
 
