@@ -1,7 +1,21 @@
-import { Controller, Get, Post, Body, Delete, Put, Param, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Delete,
+  Put,
+  Param,
+  Res,
+} from '@nestjs/common';
 
 import { ContentsService } from './contents.service';
-import { CreateContentDto, GetOneItemDto, UpdateContentDto, DeleteItem } from './dto/content.dto';
+import {
+  CreateContentDto,
+  GetOneItemDto,
+  UpdateContentDto,
+  DeleteItem,
+} from './dto/content.dto';
 
 @Controller('contents')
 export class ContentsController {
@@ -12,8 +26,8 @@ export class ContentsController {
   async createContent(@Res() res, @Body() CreateContentDto: CreateContentDto) {
     await this.contentsService.create(CreateContentDto);
     return res.json({
-      message: "Content has been created successfully"
-    })
+      message: 'Content has been created successfully',
+    });
   }
 
   // 'getAll()' returns the list of all the existing users in the database
@@ -39,5 +53,4 @@ export class ContentsController {
   async delete(@Body() DeleteItem: DeleteItem) {
     return this.contentsService.delete(DeleteItem);
   }
-
 }

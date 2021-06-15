@@ -14,13 +14,13 @@ export class CreateUserDto {
   isAdmin: boolean;
 }
 
-export class GetOneItemDto{
+export class GetOneItemDto {
   @IsNotEmpty()
   @IsNumber()
   id: number;
 }
 
-export class UpdateUserDto{
+export class UpdateUserDto {
   @IsNotEmpty()
   id: number;
 
@@ -29,7 +29,7 @@ export class UpdateUserDto{
   nama: string;
 }
 
-export class DeleteItem{
+export class DeleteItem {
   @IsNotEmpty()
   @IsNumber()
   id: number;

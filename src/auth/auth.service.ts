@@ -10,7 +10,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async login(authLoginDto: AuthLoginDto) {
     const user = await this.validateUser(authLoginDto);
@@ -21,11 +21,13 @@ export class AuthService {
 
     return {
       access_token: this.jwtService.sign(payload),
-      user: [{
-        id: user.id,
-        user: user.username,
-        isAdmin: user.isAdmin
-      }]
+      user: [
+        {
+          id: user.id,
+          user: user.username,
+          isAdmin: user.isAdmin,
+        },
+      ],
     };
   }
 

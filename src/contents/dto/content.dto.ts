@@ -8,13 +8,13 @@ export class CreateContentDto {
   author: string;
 }
 
-export class GetOneItemDto{
+export class GetOneItemDto {
   @IsNotEmpty()
   @IsNumber()
   id: number;
 }
 
-export class UpdateContentDto{
+export class UpdateContentDto {
   @IsNotEmpty()
   id: number;
 
@@ -27,7 +27,7 @@ export class UpdateContentDto{
   author: string;
 }
 
-export class DeleteItem{
+export class DeleteItem {
   @IsNotEmpty()
   @IsNumber()
   id: number;

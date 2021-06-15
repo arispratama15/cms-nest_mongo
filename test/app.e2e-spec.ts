@@ -1,86 +1,79 @@
-import { Test, TestingModule } from '@nestjs/testing'
-import { INestApplication, ValidationPipe } from '@nestjs/common'
-import * as request from 'supertest'
-import { AppModule } from './../src/app.module'
-import { User } from '../src/users/user.entity'
-
-jest.mock('../src/users/user.entity')
-
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import * as request from 'supertest';
+import { AppModule } from './../src/app.module';
 
 describe('AppController (e2e)', () => {
-  let app: INestApplication
+  let app: INestApplication;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile()
+    }).compile();
 
-    app = moduleFixture.createNestApplication()
+    app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
-    await app.init()
-
-    // tip: access the database connection via
-    // const connection = app.get(Connection)
-    // const a = connection.manager
-  })
+    await app.init();
+  });
 
   afterAll(async () => {
-    await Promise.all([
-      app.close(),
-    ])
-  })
-
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!')
-  })
+    await Promise.all([app.close()]);
+  });
 
   describe('Users url', () => {
-    it('/users (GET)', () => {
+    it('/users (POST) register', () => {
+      const payload = {
+        nama: 'test',
+        username: 'test',
+        password: 'test',
+        isAdmin: false,
+      };
       return request(app.getHttpServer())
-        .get('/users')
-        .expect(200)
-    })
+        .post('/users')
+        .send(payload)
+        .expect(201);
+    });
+    it('/users (GET)', () => {
+      return request(app.getHttpServer()).get('/users').expect(200);
+    });
     it('/users/profile (POST)', () => {
       const payload = {
-        id: 7
-      }
+        id: 1,
+      };
       return request(app.getHttpServer())
         .post('/users/profile')
         .send(payload)
-        .expect(201)
-    })
+        .expect(201);
+    });
     it('/users/profile (POST) error bad request', () => {
       const payload = {
-        id: ""
-      }
+        id: '',
+      };
       return request(app.getHttpServer())
         .post('/users/profile')
         .send(payload)
-        .expect(400)
-    })
+        .expect(400);
+    });
     it('/users/:id (PUT)', () => {
       const payload = {
-        id: 7,
-        nama: "something"
-      }
+        id: 1,
+        nama: 'admin',
+      };
       return request(app.getHttpServer())
         .put(`/users/${payload.id}`)
         .send(payload)
-        .expect(200)
-    })
+        .expect(200);
+    });
     it('/users/:id (PUT) error bad request', () => {
       const payload = {
-        id: 7,
-        nama: ""
-      }
+        id: 1,
+        nama: '',
+      };
       return request(app.getHttpServer())
         .put(`/users/${payload.id}`)
         .send(payload)
-        .expect(400)
-    })
+        .expect(400);
+    });
     // it('/users/:id (DELETE)', () => {
     //   const payload = {
     //     id: 7,
@@ -100,28 +93,27 @@ describe('AppController (e2e)', () => {
     //     .send(payload)
     //     .expect(400)
     // })
-  })
+  });
   describe('Auth url', () => {
     it('/auth (Post)', () => {
       const payload = {
-        username: "admin",
-        password: "welcome@123"
-      }
+        username: 'admin',
+        password: 'admin',
+      };
       return request(app.getHttpServer())
         .post('/auth')
         .send(payload)
-        .expect(201)
-    })
+        .expect(201);
+    });
     it('/auth (Post) error unauthorized', () => {
       const payload = {
-        username: "admin",
-        password: "lala"
-      }
+        username: 'admin',
+        password: 'password',
+      };
       return request(app.getHttpServer())
         .post('/auth')
         .send(payload)
-        .expect(401)
-    })
-  })
-
-})
+        .expect(401);
+    });
+  });
+});
