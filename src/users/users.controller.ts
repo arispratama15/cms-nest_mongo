@@ -6,16 +6,10 @@ import {
   Delete,
   Put,
   Param,
-  Res,
 } from '@nestjs/common';
 
 import { UsersService } from './users.service';
-import {
-  CreateUserDto,
-  UpdateUserDto,
-  GetOneItemDto,
-  DeleteItem,
-} from './dto/user.dto';
+import { CreateUserDto } from './dto/user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -23,8 +17,9 @@ export class UsersController {
 
   // create user
   @Post()
-  addUser(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async createOneUser(@Body() createUserDto: CreateUserDto) {
+    const generatedId = await this.usersService.createOneUser(createUserDto);
+    return { id: generatedId };
   }
 
   // 'getAll()' returns the list of all the existing users in the database
@@ -33,21 +28,20 @@ export class UsersController {
     return this.usersService.getAllUsers();
   }
 
-  // find user by id
-  @Post('/profile')
-  show(@Body() GetOneItemDto: GetOneItemDto) {
-    return this.usersService.findById(GetOneItemDto);
+  @Get(':id')
+  getOneUser(@Param('id') userId: string) {
+    return this.usersService.getOneUser(userId);
   }
 
-  // put to edit user profile by id
-  @Put('/:id')
-  async update(@Body() UpdateUserDto: UpdateUserDto) {
-    return this.usersService.update(UpdateUserDto);
+  @Put(':id')
+  updateUser(@Param('id') userId: string, @Body('nama') nama: string) {
+    this.usersService.updateUser(userId, nama);
+    return null;
   }
 
-  // delete user by id
-  @Delete('/delete')
-  async delete(@Body() DeleteItem: DeleteItem) {
-    return this.usersService.delete(DeleteItem);
+  @Delete(':id')
+  deleteUser(@Param('id') userId: string) {
+    this.usersService.deleteUser(userId);
+    return null;
   }
 }

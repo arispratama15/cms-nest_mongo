@@ -6,28 +6,25 @@ import {
   Delete,
   Put,
   Param,
-  Res,
 } from '@nestjs/common';
 
 import { ContentsService } from './contents.service';
-import {
-  CreateContentDto,
-  GetOneItemDto,
-  UpdateContentDto,
-  DeleteItem,
-} from './dto/content.dto';
 
 @Controller('contents')
 export class ContentsController {
   constructor(private readonly contentsService: ContentsService) {}
 
-  // create content
+  // create user
   @Post()
-  async createContent(@Res() res, @Body() CreateContentDto: CreateContentDto) {
-    await this.contentsService.create(CreateContentDto);
-    return res.json({
-      message: 'Content has been created successfully',
-    });
+  async createOneUser(
+    @Body('author') author: string,
+    @Body('konten') konten: string,
+  ) {
+    const generatedId = await this.contentsService.createOneContent(
+      author,
+      konten,
+    );
+    return { id: generatedId };
   }
 
   // 'getAll()' returns the list of all the existing users in the database
@@ -36,21 +33,24 @@ export class ContentsController {
     return this.contentsService.getAllContents();
   }
 
-  // find user by id
-  @Post('/list')
-  show(@Body() GetOneItemDto: GetOneItemDto) {
-    return this.contentsService.findById(GetOneItemDto);
+  @Get(':id')
+  getOneUser(@Param('id') contentId: string) {
+    return this.contentsService.getOneContent(contentId);
   }
 
-  // put to edit user profile by id
   @Put(':id')
-  async update(@Body() UpdateContentDto: UpdateContentDto) {
-    return this.contentsService.update(UpdateContentDto);
+  updateUser(
+    @Param('id') contentId: string,
+    @Body('author') author: string,
+    @Body('konten') konten: string,
+  ) {
+    this.contentsService.updateContent(contentId, author, konten);
+    return null;
   }
 
-  // delete user by id
-  @Delete('/delete')
-  async delete(@Body() DeleteItem: DeleteItem) {
-    return this.contentsService.delete(DeleteItem);
+  @Delete(':id')
+  deleteUser(@Param('id') userId: string) {
+    this.contentsService.deleteContent(userId);
+    return null;
   }
 }

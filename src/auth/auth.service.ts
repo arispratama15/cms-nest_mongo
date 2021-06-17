@@ -1,24 +1,20 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectModel } from '@nestjs/mongoose';
+import * as bcrypt from 'bcrypt';
+import { Model } from 'mongoose';
 
-import { User } from '../users/user.entity';
-import { UsersService } from '../users/users.service';
-import { AuthLoginDto } from './dto/auth-login.dto';
+import { User } from '../users/users.model';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    @InjectModel('User') private userModel: Model<User>,
     private jwtService: JwtService,
   ) {}
 
-  async login(authLoginDto: AuthLoginDto) {
-    const user = await this.validateUser(authLoginDto);
-
-    const payload = {
-      userId: user.id,
-    };
-
+  async signIn(user: User) {
+    const payload = { username: user.username, sub: user._id };
     return {
       access_token: this.jwtService.sign(payload),
       user: [
@@ -31,14 +27,19 @@ export class AuthService {
     };
   }
 
-  async validateUser(authLoginDto: AuthLoginDto): Promise<User> {
-    const { username, password } = authLoginDto;
+  async validateUser(username: string, password: string): Promise<User> {
+    const user = await this.userModel.findOne({ username });
 
-    const user = await this.usersService.findByUsername(username);
-    if (!(await user?.validatePassword(password))) {
-      throw new UnauthorizedException();
+    if (!user) {
+      return null;
     }
 
-    return user;
+    const valid = await bcrypt.compare(password, user.password);
+
+    if (valid) {
+      return user;
+    }
+
+    return null;
   }
 }

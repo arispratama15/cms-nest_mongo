@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { UsersService } from './users.service';
 import { User } from './user.entity';
 import {
@@ -8,25 +7,8 @@ import {
   GetOneItemDto,
   DeleteItem,
 } from './dto/user.dto';
-import { Repository } from 'typeorm';
 
 jest.mock('./user.entity');
-
-const mockUser = {
-  nama: 'test',
-  username: 'test',
-  password: 'test',
-  isAdmin: true,
-};
-
-const mockUserEntity = {
-  id: 1,
-  nama: '',
-  username: '',
-  password: '',
-  registered: new Date(),
-  isAdmin: true,
-};
 
 describe('UsersService', () => {
   let service: UsersService;

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -14,23 +14,8 @@ export class CreateUserDto {
   isAdmin: boolean;
 }
 
-export class GetOneItemDto {
-  @IsNotEmpty()
-  @IsNumber()
-  id: number;
-}
-
 export class UpdateUserDto {
-  @IsNotEmpty()
-  id: number;
-
   @IsNotEmpty()
   @IsString()
   nama: string;
-}
-
-export class DeleteItem {
-  @IsNotEmpty()
-  @IsNumber()
-  id: number;
 }
