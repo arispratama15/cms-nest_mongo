@@ -14,10 +14,19 @@ describe('UsersService', () => {
   let userModel: Model<User>;
 
   beforeEach(async () => {
-    function mockUserModel(dto: any) {
-      this.data = dto;
+    function mockUserModel() {
+      this.user = {
+        id: '1',
+        nama: '',
+        username: '',
+        password: '',
+        isAdmin: true,
+      };
       this.save = () => {
-        return this.data;
+        return this.user;
+      };
+      this.find = () => {
+        return;
       };
     }
     const module: TestingModule = await Test.createTestingModule({
@@ -36,51 +45,28 @@ describe('UsersService', () => {
 
   describe('Create User', () => {
     it('should create a new user then return it', async () => {
-      const userDto = new CreateUserDto();
-      const { nama, username, password, isAdmin } = userDto;
-      // const hashedPassword = await bcrypt.hash(password, 10);
       const hashedPassword = jest
         .spyOn(bcrypt, 'hash')
         .mockImplementation(async () => hashedPassword);
       const newUser = new userModel({
-        nama,
-        username,
+        nama: '',
+        username: '',
         password: hashedPassword,
-        isAdmin,
+        isAdmin: true,
       });
-      // const newUser = new userModel();
 
-      jest.spyOn(newUser, 'save').mockImplementation(async () => newUser);
-
-      const userCreate = (await service.createOneUser(
-        userDto,
-      )) as unknown as User;
-
-      expect(userCreate).toBe(newUser);
+      await newUser.save();
+      expect(await service.createOneUser(new CreateUserDto())).toBe('1');
     });
-    //   it('should return an error user already exist', async () => {
-    //     const user = new User();
-
-    //     jest
-    //       .spyOn(service, 'findByUsername')
-    //       .mockImplementation(async () => user);
-
-    //     const createUserDto = new CreateUserDto();
-    //     const userCreate = (await service.create(createUserDto)) as unknown as {
-    //       message: string;
-    //     };
-
-    //     expect(userCreate.message).toBe('User already exists');
-    //   });
   });
-  // describe('Get all users', () => {
-  //   it('should find all users', async () => {
-  //     const result: User[] = [];
-  //     jest.spyOn(service, 'getAllUsers').mockResolvedValueOnce(result);
+  describe('Get all users', () => {
+    it('should find all users', async () => {
+      const result: User[] = [];
+      jest.spyOn(service, 'getAllUsers').mockResolvedValueOnce(result);
 
-  //     expect(await service.getAllUsers()).toBe(result);
-  //   });
-  // });
+      expect(await service.getAllUsers()).toBe(result);
+    });
+  });
   // describe('User find by ID', () => {
   //   it('should find an user by ID', async () => {
   //     const user = new User();
