@@ -58,16 +58,14 @@ export class UsersService {
     if (nama) modUser.nama = nama;
 
     modUser.save();
+    return '1';
   }
 
   async deleteUser(userId: string) {
-    const result = await this.userModel.deleteOne({ _id: userId }).exec();
-    if (result.n === 0) {
-      throw new NotFoundException('Could not find user.');
-    }
+    return this.userModel.findByIdAndRemove(userId);
   }
 
-  private async findUser(id: string): Promise<User> {
+  async findUser(id: string): Promise<User> {
     let user: any;
     try {
       user = await this.userModel.findById(id).exec();

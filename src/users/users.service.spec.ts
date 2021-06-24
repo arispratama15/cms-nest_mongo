@@ -28,6 +28,12 @@ describe('UsersService', () => {
       this.find = () => {
         return;
       };
+      this.deleteOne = () => {
+        return;
+      };
+      this.findByIdAndRemove = () => {
+        return this.user;
+      };
     }
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -67,54 +73,46 @@ describe('UsersService', () => {
       expect(await service.getAllUsers()).toBe(result);
     });
   });
-  // describe('User find by ID', () => {
-  //   it('should find an user by ID', async () => {
-  //     const user = new User();
-  //     user.id = 1;
+  describe('User find by ID', () => {
+    it('should find an user by ID', async () => {
+      const user = new userModel();
+      user.id = '1';
+      const userId = '1';
+      jest.spyOn(service, 'findUser').mockImplementation(async () => user);
+      const findUser = (await service.getOneUser(userId)) as unknown as User;
+      expect(findUser.id).toBe('1');
+    });
+  });
+  describe('Update an user', () => {
+    it('should update an user by ID', async () => {
+      const user = new userModel();
+      user.id = '1';
+      user.nama = 'asuw';
 
-  //     jest.spyOn(User, 'findOne').mockImplementation(async () => user);
+      jest.spyOn(service, 'findUser').mockImplementation(async () => user);
+      // jest.spyOn(userModel, 'findById').
 
-  //     const getOneItemDto = new GetOneItemDto();
-  //     const findUser = (await service.findById(
-  //       getOneItemDto,
-  //     )) as unknown as User;
+      const userUpdate = (await service.updateUser(
+        user.id,
+        user.nama,
+      )) as unknown as User;
 
-  //     expect(findUser.id).toBe(user.id);
-  //   });
-  // });
-  // describe('Update an user', () => {
-  //   it('should update an user by ID', async () => {
-  //     const user = new User();
-  //     user.id = 1;
-  //     user.nama = '';
+      expect(userUpdate).toBe('1');
+    });
+  });
+  describe('Delete an user', () => {
+    it('should delete an user by ID', async () => {
+      const user = new userModel();
+      user.id = '1';
 
-  //     let result;
+      let result;
+      // jest
+      //   .spyOn(userModel, 'findByIdAndRemove')
+      //   .mockReturnValueOnce(result as any);
+      userModel.findByIdAndRemove(user.id);
+      const deleteUser = (await service.deleteUser(user.id)) as unknown as User;
 
-  //     jest.spyOn(User, 'update').mockImplementation(async () => result);
-
-  //     const updateUserDto = new UpdateUserDto();
-  //     const updateUser = (await service.update(
-  //       updateUserDto,
-  //     )) as unknown as User;
-
-  //     expect(updateUser).toBe(result);
-  //   });
-  // });
-  // describe('Delete an user', () => {
-  //   it('should delete an user by ID', async () => {
-  //     const user = new User();
-  //     user.id = 1;
-
-  //     let result;
-
-  //     jest.spyOn(User, 'delete').mockImplementation(async () => result);
-
-  //     const deleteUserDto = new DeleteItem();
-  //     const deleteUser = (await service.delete(
-  //       deleteUserDto,
-  //     )) as unknown as User;
-
-  //     expect(deleteUser).toBe(result);
-  //   });
-  // });
+      expect(deleteUser).toBe(result);
+    });
+  });
 });
